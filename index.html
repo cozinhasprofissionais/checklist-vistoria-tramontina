@@ -1,161 +1,177 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Checklist de Vistoria - Tramontina</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f2f6fa;
-      padding: 20px;
-      color: #333;
+    body { font-family: Arial, sans-serif; background-color: #f2f6fa; padding: 20px; color: #333; }
+    h1 { text-align: center; color: #0a3d62; }
+    form { background: #fff; padding: 20px; border-radius: 8px; max-width: 800px; margin: 0 auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    label { display: block; margin-top: 15px; font-weight: bold; }
+    input[type="text"], input[type="number"], input[type="file"], textarea {
+      width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px;
     }
-    h1 {
-      text-align: center;
-      color: #0a3d62;
-    }
-    form {
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      max-width: 800px;
-      margin: 0 auto;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
-    }
-    input[type="text"],
-    input[type="file"],
-    textarea {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    .checkbox-group {
-      margin-top: 10px;
-    }
-    .checkbox-group label {
-      font-weight: normal;
-      margin-right: 20px;
-    }
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background-color: #0a3d62;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #145889;
-    }
-    p {
-      margin-top: 5px;
-    }
+    .checkbox-group { margin-top: 10px; }
+    .checkbox-group label { font-weight: normal; margin-right: 20px; display: block; margin-bottom: 5px; }
+    .equipamento-box { margin-left: 15px; margin-top: 10px; display: none; }
+    button { margin-top: 20px; padding: 10px 20px; background-color: #0a3d62; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background-color: #145889; }
+    p { margin-top: 5px; }
   </style>
 </head>
 <body>
-  <h1>Checklist de Vistoria - Tramontina</h1>
-  <form>
+<h1>Checklist de Vistoria - Tramontina</h1>
+<form>
 
-    <label>Número da Ordem:</label>
-    <input type="text" name="numero_ordem" required>
+  <label>Número da Ordem:</label>
+  <input type="text" name="numero_ordem" required />
 
-    <label>Razão Social:</label>
-    <input type="text" name="razao_social" required>
+  <label>Razão Social:</label>
+  <input type="text" name="razao_social" required />
 
-    <label>CNPJ:</label>
-    <input type="text" name="cnpj" required>
+  <label>CNPJ:</label>
+  <input type="text" name="cnpj" required />
 
-    <label>Local da Instalação (pode marcar mais de uma):</label>
+  <label>Local da Instalação (pode marcar mais de uma):</label>
+  <div class="checkbox-group">
+    <label><input type="checkbox" name="instalacao[]" value="mono_220" /> Monofásico 220V</label>
+    <label><input type="checkbox" name="instalacao[]" value="tri_220" /> Trifásico 220V</label>
+    <label><input type="checkbox" name="instalacao[]" value="tri_380" /> Trifásico 380V</label>
+  </div>
+
+  <label>O local possui sistema de gás instalado?</label>
+  <div class="checkbox-group">
+    <label><input type="radio" name="possui_gas" value="sim" onchange="mostrarCamposGas(true)" /> Sim</label>
+    <label><input type="radio" name="possui_gas" value="nao" onchange="mostrarCamposGas(false)" /> Não</label>
+  </div>
+
+  <div id="camposGas" style="display:none;">
+    <label>Tipo de Gás (pode marcar mais de um):</label>
     <div class="checkbox-group">
-      <label><input type="checkbox" name="instalacao[]" value="mono_220"> Monofásico 220V</label>
-      <label><input type="checkbox" name="instalacao[]" value="tri_220"> Trifásico 220V</label>
-      <label><input type="checkbox" name="instalacao[]" value="tri_380"> Trifásico 380V</label>
+      <label><input type="checkbox" name="tipo_gas[]" value="glp" onchange="mostrarSubCamposGas()" /> Gás GLP</label>
+      <label><input type="checkbox" name="tipo_gas[]" value="natural" onchange="mostrarSubCamposGas()" /> Gás Natural</label>
     </div>
 
-    <label>O local possui sistema de gás instalado?</label>
-    <div class="checkbox-group">
-      <label><input type="radio" name="possui_gas" value="sim" onchange="mostrarCamposGas(true)"> Sim</label>
-      <label><input type="radio" name="possui_gas" value="nao" onchange="mostrarCamposGas(false)"> Não</label>
+    <div id="campoGLP" style="display:none;">
+      <label>Foto dos botijões e válvulas de primeiro estágio (GLP):</label>
+      <input type="file" name="foto_glp_botijoes" />
     </div>
 
-    <div id="camposGas" style="display:none; margin-top: 15px; padding: 15px; border: 1px solid #ccc; border-radius: 6px;">
-      <label>Tipo de Gás (pode marcar mais de um):</label>
-      <div class="checkbox-group">
-        <label><input type="checkbox" name="tipo_gas[]" value="glp" onchange="mostrarSubCamposGas()"> Gás GLP</label>
-        <label><input type="checkbox" name="tipo_gas[]" value="natural" onchange="mostrarSubCamposGas()"> Gás Natural</label>
-      </div>
+    <div id="campoGN" style="display:none;">
+      <label>Foto do medidor de consumo (Gás Natural):</label>
+      <input type="file" name="foto_gn_medidor" />
 
-      <div id="campoGLP" style="display:none; margin-top: 15px;">
-        <label>Foto dos botijões e válvulas de primeiro estágio (GLP):</label>
-        <input type="file" name="foto_glp_botijoes">
-      </div>
+      <label>Foto da etiqueta do medidor e da válvula ao lado (Gás Natural):</label>
+      <input type="file" name="foto_gn_etiqueta" />
+    </div>
+  </div>
 
-      <div id="campoGN" style="display:none; margin-top: 15px;">
-        <label>Foto do medidor de consumo (Gás Natural):</label>
-        <input type="file" name="foto_gn_medidor">
+  <label>O equipamento será ligado em disjuntor de quantos amperes?</label>
+  <input type="text" name="disjuntor_amperagem" placeholder="Ex: 32A" />
 
-        <label>Foto da etiqueta do medidor e da válvula ao lado (Gás Natural):</label>
-        <input type="file" name="foto_gn_etiqueta">
-      </div>
+  <label>Foto do disjuntor (indicando a amperagem e o cabo correspondente):</label>
+  <input type="file" name="foto_disjuntor_amperagem" />
+
+  <label>Foto mostrando a espessura do cabo e o número de vias:</label>
+  <input type="file" name="foto_espessura_cabo" />
+
+  <label>Foto da tomada Astek (tomada industrial, quando houver):</label>
+  <input type="file" name="foto_tomada_astek" />
+
+  <label>Equipamentos Elétricos (marque os que estão no local):</label>
+  <div class="checkbox-group">
+    <label><input type="checkbox" value="forno" onchange="toggleEquip('forno')" /> Forno</label>
+    <div id="equip_forno" class="equipamento-box">
+      <input type="number" name="qtd_forno" placeholder="Quantidade" />
+      <input type="text" name="codigo_forno" placeholder="Código do equipamento" />
     </div>
 
-    <label>O equipamento será ligado em disjuntor de quantos amperes?</label>
-    <input type="text" name="disjuntor_amperagem" placeholder="Ex: 32A">
-    <label>Anexar foto do disjuntor:</label>
-    <input type="file" name="foto_disjuntor">
-
-    <label>Pontos de Ligação:</label>
-    <p style="font-style: italic; color: #555;">
-      Enviar fotos dos pontos de <strong>hidráulica</strong> e <strong>esgoto/dreno</strong>, com medições de altura conforme ficha técnica.
-    </p>
-    <label>Foto dos pontos de hidráulica:</label>
-    <input type="file" name="foto_hidraulica">
-
-    <label>Foto dos pontos de esgoto/dreno:</label>
-    <input type="file" name="foto_esgoto">
-
-    <label>Verificação das Paredes (pode marcar mais de uma):</label>
-    <div class="checkbox-group">
-      <label><input type="checkbox" name="tipo_parede[]" value="alvenaria"> Alvenaria</label>
-      <label><input type="checkbox" name="tipo_parede[]" value="drywall"> Drywall</label>
+    <label><input type="checkbox" value="fogao" onchange="toggleEquip('fogao')" /> Fogão</label>
+    <div id="equip_fogao" class="equipamento-box">
+      <input type="number" name="qtd_fogao" placeholder="Quantidade" />
+      <input type="text" name="codigo_fogao" placeholder="Código do equipamento" />
     </div>
 
-    <label>Comentários adicionais:</label>
-    <textarea name="comentarios" rows="4" placeholder="Observações ou informações adicionais..."></textarea>
+    <label><input type="checkbox" value="coifa" onchange="toggleEquip('coifa')" /> Coifa</label>
+    <div id="equip_coifa" class="equipamento-box">
+      <input type="number" name="qtd_coifa" placeholder="Quantidade" />
+      <input type="text" name="codigo_coifa" placeholder="Código do equipamento" />
+    </div>
 
-    <button type="submit">Enviar Checklist</button>
-  </form>
+    <label><input type="checkbox" value="chapa" onchange="toggleEquip('chapa')" /> Chapa</label>
+    <div id="equip_chapa" class="equipamento-box">
+      <input type="number" name="qtd_chapa" placeholder="Quantidade" />
+      <input type="text" name="codigo_chapa" placeholder="Código do equipamento" />
+    </div>
 
-  <script>
-    function mostrarCamposGas(exibir) {
-      document.getElementById('camposGas').style.display = exibir ? 'block' : 'none';
-      if (!exibir) {
-        document.getElementById('campoGLP').style.display = 'none';
-        document.getElementById('campoGN').style.display = 'none';
-      }
-    }
+    <label><input type="checkbox" value="fritadeira" onchange="toggleEquip('fritadeira')" /> Fritadeira</label>
+    <div id="equip_fritadeira" class="equipamento-box">
+      <input type="number" name="qtd_fritadeira" placeholder="Quantidade" />
+      <input type="text" name="codigo_fritadeira" placeholder="Código do equipamento" />
+    </div>
+  </div>
 
-    function mostrarSubCamposGas() {
-      const checkboxes = document.getElementsByName('tipo_gas[]');
-      let glp = false;
-      let gn = false;
-      checkboxes.forEach(cb => {
-        if (cb.checked && cb.value === 'glp') glp = true;
-        if (cb.checked && cb.value === 'natural') gn = true;
-      });
+  <label>Algum dos equipamentos possui ponto de dreno ou saída de água?</label>
+  <div class="checkbox-group">
+    <label><input type="radio" name="tem_dreno" value="sim" onchange="toggleDreno(true)" /> Sim</label>
+    <label><input type="radio" name="tem_dreno" value="nao" onchange="toggleDreno(false)" /> Não</label>
+  </div>
 
-      document.getElementById('campoGLP').style.display = glp ? 'block' : 'none';
-      document.getElementById('campoGN').style.display = gn ? 'block' : 'none';
-    }
-  </script>
+  <div id="campoDreno" style="display:none;">
+    <label>Informe o(s) código(s) dos equipamentos com dreno ou ponto de água:</label>
+    <input type="text" name="codigo_dreno" placeholder="Ex: Lava-louças AXP-15, Cozedor XPZ-40" />
+
+    <label>Anexe a foto do ponto de dreno ou saída de água:</label>
+    <input type="file" name="foto_dreno_agua" />
+  </div>
+
+  <label>Pontos de Ligação:</label>
+  <p style="font-style: italic; color: #555;">Enviar fotos dos pontos de <strong>hidráulica</strong> e <strong>esgoto/dreno</strong>, com medições de altura conforme ficha técnica.</p>
+  <label>Foto dos pontos de hidráulica:</label>
+  <input type="file" name="foto_hidraulica" />
+  <label>Foto dos pontos de esgoto/dreno:</label>
+  <input type="file" name="foto_esgoto" />
+
+  <label>Verificação das Paredes (pode marcar mais de uma):</label>
+  <div class="checkbox-group">
+    <label><input type="checkbox" name="tipo_parede[]" value="alvenaria" /> Alvenaria</label>
+    <label><input type="checkbox" name="tipo_parede[]" value="drywall" /> Drywall</label>
+  </div>
+
+  <label>Comentários adicionais:</label>
+  <textarea name="comentarios" rows="4" placeholder="Observações ou informações adicionais..."></textarea>
+
+  <button type="submit">Enviar Checklist</button>
+</form>
+
+<script>
+function mostrarCamposGas(exibir) {
+  document.getElementById('camposGas').style.display = exibir ? 'block' : 'none';
+  if (!exibir) {
+    document.getElementById('campoGLP').style.display = 'none';
+    document.getElementById('campoGN').style.display = 'none';
+  }
+}
+function mostrarSubCamposGas() {
+  const checkboxes = document.getElementsByName('tipo_gas[]');
+  let glp = false, gn = false;
+  checkboxes.forEach(cb => {
+    if (cb.checked && cb.value === 'glp') glp = true;
+    if (cb.checked && cb.value === 'natural') gn = true;
+  });
+  document.getElementById('campoGLP').style.display = glp ? 'block' : 'none';
+  document.getElementById('campoGN').style.display = gn ? 'block' : 'none';
+}
+function toggleEquip(nome) {
+  const campo = document.getElementById("equip_" + nome);
+  const checkbox = document.querySelector("input[value='" + nome + "']");
+  campo.style.display = checkbox.checked ? "block" : "none";
+}
+function toggleDreno(exibir) {
+  document.getElementById("campoDreno").style.display = exibir ? "block" : "none";
+}
+</script>
 </body>
 </html>
