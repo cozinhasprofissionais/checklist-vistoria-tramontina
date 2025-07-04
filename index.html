@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -87,10 +88,10 @@
       <label>Número da Ordem:</label>
       <input type="text" name="numero_ordem" required required>
 
-      <label>Razão Social:</label>
+      <label>Razão Social do Cliente:</label>
       <input type="text" name="razao_social" required style="max-width: 100%;" required style="max-width: 100%;">
 
-      <label>CNPJ:</label>
+      <label>CNPJ do Cliente:</label>
       <input type="text" name="cnpj" required required>
 
       <label>Local da Instalação:</label>
@@ -119,8 +120,11 @@
         </div>
 
         <div id="campo_glp" class="conditional">
-          <label>Foto dos botijões e válvulas de primeiro estágio:</label>
-          <input type="file" name="foto_glp">
+          <label>Foto dos botijões:</label>
+          <input type="file" name="foto_glp_botijoes">
+
+<label>Foto da válvula de primeiro estágio:</label>
+          <input type="file" name="foto_glp_valvula">
         </div>
 
         <div id="campo_gn" class="conditional">
@@ -131,13 +135,13 @@
         </div>
       </div>
 
-      <label>Equipamentos Elétricos no local?</label>
+      <label>Equipamentos Elétricos no local?</label><div class="radio-group">
       <div class="radio-group">
         <label><input type="radio" name="tem_equipamentos" value="sim" onchange="toggleEquipamentos(true)"> Sim</label>
         <label><input type="radio" name="tem_equipamentos" value="nao" onchange="toggleEquipamentos(false)"> Não</label>
       </div>
 
-      <div id="equipamentos_section" class="conditional">
+      <div id="equipamentos_section" class="conditional" style="display:none;">
         <label>Quantidade de equipamentos:</label>
         <input type="number" name="qtd_equipamentos" id="qtd_equipamentos" min="1" onchange="gerarEquipamentos()">
         
@@ -152,21 +156,26 @@
           container.innerHTML += `
             <div class="equipamento-set">
               <h4 style='color:#4fc3f7;'>Equipamento ${i}</h4>
-              <label>Código:</label>
-              <input type="text" name="codigo_equip_${i}" required>
-              <label>Disjuntor (amperagem):</label>
+              
+              <label>O equipamento será ligado em disjuntor de quantos amperes? (descrever):</label>
               <input type="text" name="disjuntor_equip_${i}">
-              <label>Foto do disjuntor:</label>
+              <label>Foto do disjuntor (indicando a amperagem):</label>
               <input type="file" name="foto_disjuntor_${i}">
-              <label>Foto da espessura do cabo e nº de vias:</label>
+              <label>Foto mostrando a espessura do cabo e o número de vias:</label>
               <input type="file" name="foto_cabo_${i}">
-              <label>Foto da tomada Astek:</label>
+              <label>Foto da tomada Astek (tomada industrial, quando houver):</label>
               <input type="file" name="foto_astek_${i}">
             </div>
           `;
         }
       }
-    </script>
+    
+function mostrarEquipamentos(exibir) {
+  const div = document.getElementById("equipamentos_section");
+  div.style.display = exibir ? "block" : "none";
+  if (exibir) gerarEquipamentos();
+}
+</script>
     
       </div>
 
@@ -222,13 +231,13 @@
             <h4>Equipamento ${i}</h4>
             <label>Código:</label>
             <input type="text" name="codigo_equip_${i}">
-            <label>Disjuntor (amperagem):</label>
+            <label>O equipamento será ligado em disjuntor de quantos amperes? (descrever):</label>
             <input type="text" name="disjuntor_equip_${i}">
-            <label>Foto do disjuntor:</label>
+            <label>Foto do disjuntor (indicando a amperagem):</label>
             <input type="file" name="foto_disjuntor_${i}">
-            <label>Foto da espessura do cabo e nº de vias:</label>
+            <label>Foto mostrando a espessura do cabo e o número de vias:</label>
             <input type="file" name="foto_cabo_${i}">
-            <label>Foto da tomada Astek:</label>
+            <label>Foto da tomada Astek (tomada industrial, quando houver):</label>
             <input type="file" name="foto_astek_${i}">
           </div>`;
       }
@@ -237,6 +246,12 @@
     function toggleDreno(sim) {
       document.getElementById("campo_dreno").style.display = sim ? "block" : "none";
     }
-  </script>
+  
+function mostrarEquipamentos(exibir) {
+  const div = document.getElementById("equipamentos_section");
+  div.style.display = exibir ? "block" : "none";
+  if (exibir) gerarEquipamentos();
+}
+</script>
 </body>
 </html>
