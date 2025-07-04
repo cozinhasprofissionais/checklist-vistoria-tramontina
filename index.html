@@ -86,13 +86,13 @@
     <form>
 
       <label>Número da Ordem:</label>
-      <input type="text" name="numero_ordem" required required>
+      <input type="text" name="numero_ordem" required>
 
       <label>Razão Social do Cliente:</label>
-      <input type="text" name="razao_social" required style="max-width: 100%;" required style="max-width: 100%;">
+      <input type="text" name="razao_social" required style="max-width: 100%;">
 
       <label>CNPJ do Cliente:</label>
-      <input type="text" name="cnpj" required required>
+      <input type="text" name="cnpj" required>
 
       <label>Local da Instalação:</label>
       <div class="radio-group">
@@ -122,8 +122,7 @@
         <div id="campo_glp" class="conditional">
           <label>Foto dos botijões:</label>
           <input type="file" name="foto_glp_botijoes">
-
-<label>Foto da válvula de primeiro estágio:</label>
+          <label>Foto da válvula de primeiro estágio:</label>
           <input type="file" name="foto_glp_valvula">
         </div>
 
@@ -135,48 +134,16 @@
         </div>
       </div>
 
-      <label>Equipamentos Elétricos no local?</label><div class="radio-group">
+      <label>Equipamentos Elétricos no local?</label>
       <div class="radio-group">
         <label><input type="radio" name="tem_equipamentos" value="sim" onchange="toggleEquipamentos(true)"> Sim</label>
         <label><input type="radio" name="tem_equipamentos" value="nao" onchange="toggleEquipamentos(false)"> Não</label>
       </div>
 
-      <div id="equipamentos_section" class="conditional" style="display:none;">
+      <div id="equipamentos_section" class="conditional">
         <label>Quantidade de equipamentos:</label>
         <input type="number" name="qtd_equipamentos" id="qtd_equipamentos" min="1" onchange="gerarEquipamentos()">
-        
-    <div id="equipamentos_container"></div>
-    <script>
-      function gerarEquipamentos() {
-        const container = document.getElementById("equipamentos_container");
-        container.innerHTML = "";
-        const qtd = parseInt(document.getElementById("qtd_equipamentos").value);
-        if (isNaN(qtd) || qtd < 1) return;
-        for (let i = 1; i <= qtd; i++) {
-          container.innerHTML += `
-            <div class="equipamento-set">
-              <h4 style='color:#4fc3f7;'>Equipamento ${i}</h4>
-              
-              <label>O equipamento será ligado em disjuntor de quantos amperes? (descrever):</label>
-              <input type="text" name="disjuntor_equip_${i}">
-              <label>Foto do disjuntor (indicando a amperagem):</label>
-              <input type="file" name="foto_disjuntor_${i}">
-              <label>Foto mostrando a espessura do cabo e o número de vias:</label>
-              <input type="file" name="foto_cabo_${i}">
-              <label>Foto da tomada Astek (tomada industrial, quando houver):</label>
-              <input type="file" name="foto_astek_${i}">
-            </div>
-          `;
-        }
-      }
-    
-function mostrarEquipamentos(exibir) {
-  const div = document.getElementById("equipamentos_section");
-  div.style.display = exibir ? "block" : "none";
-  if (exibir) gerarEquipamentos();
-}
-</script>
-    
+        <div id="equipamentos_container"></div>
       </div>
 
       <label>Algum dos equipamentos possui ponto de dreno ou saída de água?</label>
@@ -218,19 +185,27 @@ function mostrarEquipamentos(exibir) {
     }
 
     function toggleEquipamentos(sim) {
-      document.getElementById("equipamentos_section").style.display = sim ? "block" : "none";
+      const equipamentosSection = document.getElementById("equipamentos_section");
+      equipamentosSection.style.display = sim ? "block" : "none";
+      if (sim) gerarEquipamentos();
     }
 
     function gerarEquipamentos() {
       const container = document.getElementById("equipamentos_container");
       container.innerHTML = "";
-      const qtd = parseInt(document.getElementById("qtd_equipamentos").value);
+      let qtd = parseInt(document.getElementById("qtd_equipamentos").value);
+      if (isNaN(qtd) || qtd < 1) return;
+
+      if (qtd > 30) {
+        alert("O limite máximo é de 30 equipamentos.");
+        qtd = 30;
+        document.getElementById("qtd_equipamentos").value = 30;
+      }
+
       for (let i = 1; i <= qtd; i++) {
         container.innerHTML += `
-          <div class="equipamento-set">
-            <h4>Equipamento ${i}</h4>
-            <label>Código:</label>
-            <input type="text" name="codigo_equip_${i}">
+          <div class="equipamento-set" style="display:block;">
+            <h4 style='color:#4fc3f7;'>Equipamento ${i}</h4>
             <label>O equipamento será ligado em disjuntor de quantos amperes? (descrever):</label>
             <input type="text" name="disjuntor_equip_${i}">
             <label>Foto do disjuntor (indicando a amperagem):</label>
@@ -239,19 +214,14 @@ function mostrarEquipamentos(exibir) {
             <input type="file" name="foto_cabo_${i}">
             <label>Foto da tomada Astek (tomada industrial, quando houver):</label>
             <input type="file" name="foto_astek_${i}">
-          </div>`;
+          </div>
+        `;
       }
     }
 
     function toggleDreno(sim) {
       document.getElementById("campo_dreno").style.display = sim ? "block" : "none";
     }
-  
-function mostrarEquipamentos(exibir) {
-  const div = document.getElementById("equipamentos_section");
-  div.style.display = exibir ? "block" : "none";
-  if (exibir) gerarEquipamentos();
-}
-</script>
+  </script>
 </body>
 </html>
