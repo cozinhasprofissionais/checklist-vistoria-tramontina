@@ -82,14 +82,13 @@
       color: #324b61;
     }
     .logo {
-  display: block;
-  margin: 0 auto 20px auto;
-  width: 100%;
-  max-width: 500px;
-  height: auto;
-}
-
-@media (max-width: 600px) {
+      display: block;
+      margin: 0 auto 20px auto;
+      width: 100%;
+      max-width: 500px;
+      height: auto;
+    }
+    @media (max-width: 600px) {
       .container {
         padding: 20px;
       }
@@ -116,6 +115,7 @@
         <label>CNPJ do Cliente:</label>
         <input name="cnpj" required type="text"/>
       </div>
+
       <div class="form-group">
         <label>Tensão elétrica no local da instalação (pode selecionar mais de uma):</label>
         <div class="checkbox-group">
@@ -136,6 +136,7 @@
           </div>
         </div>
       </div>
+
       <div class="form-group">
         <label>O local possui sistema de gás instalado?</label>
         <div class="radio-group">
@@ -166,6 +167,7 @@
           <input name="foto_gn_valvula" type="file"/>
         </div>
       </div>
+
       <div class="form-group">
         <label>Equipamentos elétricos estão no local da instalação?</label>
         <div class="radio-group">
@@ -182,6 +184,7 @@
           <textarea name="descricao_armazenamento" rows="3"></textarea>
         </div>
       </div>
+
       <div class="form-group">
         <label>Algum dos equipamentos possui ponto de dreno ou saída de água?</label>
         <div class="radio-group">
@@ -195,6 +198,7 @@
         <label>Foto dos pontos de esgoto/dreno:</label>
         <input name="foto_esgoto" type="file"/>
       </div>
+
       <div class="form-group">
         <label>Verificação das Paredes:</label>
         <div class="radio-group">
@@ -202,10 +206,12 @@
           <label><input type="radio" name="parede" value="drywall"/> Drywall</label>
         </div>
       </div>
+
       <div class="form-group">
         <label>Comentários adicionais:</label>
         <textarea name="comentarios" rows="6" placeholder="Descreva observações do local, condições, etc."></textarea>
       </div>
+
       <button type="submit">Enviar Checklist</button>
     </form>
   </div>
@@ -217,37 +223,31 @@
     }
 
     function toggleTipoGas() {
-      const tipo = document.querySelector("input[name='tipo_gas']:checked").value;
-      document.getElementById("campo_glp").style.display = tipo === "glp" ? "block" : "none";
-      document.getElementById("campo_gn").style.display = tipo === "gn" ? "block" : "none";
+      const tipo = document.querySelector("input[name='tipo_gas']:checked");
+      if (!tipo) return;
+      document.getElementById("campo_glp").style.display = tipo.value === "glp" ? "block" : "none";
+      document.getElementById("campo_gn").style.display = tipo.value === "gn" ? "block" : "none";
     }
 
-    
-function toggleEquipamentos(sim) {
-  const equipamentosSection = document.getElementById("equipamentos_section");
-  const campoArmazenamento = document.getElementById("campo_armazenamento_equipamentos");
-  const qtdInput = document.getElementById("qtd_equipamentos");
-  const container = document.getElementById("equipamentos_container");
-
-  equipamentosSection.style.display = "block";
-
-  if (sim) {
-    qtdInput.style.display = "block";
-    container.style.display = "block";
-    campoArmazenamento.style.display = "none";
-    gerarEquipamentos();
-  } else {
-    qtdInput.style.display = "none";
-    container.style.display = "none";
-    campoArmazenamento.style.display = "block";
-  }
-}
-
+    function toggleEquipamentos(sim) {
       const equipamentosSection = document.getElementById("equipamentos_section");
       const campoArmazenamento = document.getElementById("campo_armazenamento_equipamentos");
-      equipamentosSection.style.display = sim ? "block" : "none";
-      campoArmazenamento.style.display = sim ? "none" : "block";
-      if (sim) gerarEquipamentos();
+      const qtdInput = document.getElementById("qtd_equipamentos");
+      const container = document.getElementById("equipamentos_container");
+
+      equipamentosSection.style.display = "block";
+
+      if (sim) {
+        qtdInput.style.display = "block";
+        container.style.display = "block";
+        campoArmazenamento.style.display = "none";
+        gerarEquipamentos();
+      } else {
+        qtdInput.style.display = "none";
+        container.style.display = "none";
+        campoArmazenamento.style.display = "block";
+        container.innerHTML = "";
+      }
     }
 
     function gerarEquipamentos() {
@@ -284,6 +284,21 @@ function toggleEquipamentos(sim) {
     function toggleDreno(sim) {
       document.getElementById("campo_dreno").style.display = sim ? "block" : "none";
     }
+
+    window.onload = function () {
+      // Recarregar campos se o usuário já tiver preenchido
+      const gasChecked = document.querySelector("input[name='gas_instalado']:checked");
+      if (gasChecked) toggleGas(gasChecked.value === "sim");
+
+      const tipoGasChecked = document.querySelector("input[name='tipo_gas']:checked");
+      if (tipoGasChecked) toggleTipoGas();
+
+      const eqChecked = document.querySelector("input[name='tem_equipamentos']:checked");
+      if (eqChecked) toggleEquipamentos(eqChecked.value === "sim");
+
+      const drenoChecked = document.querySelector("input[name='tem_dreno']:checked");
+      if (drenoChecked) toggleDreno(drenoChecked.value === "sim");
+    };
   </script>
 </body>
 </html>
