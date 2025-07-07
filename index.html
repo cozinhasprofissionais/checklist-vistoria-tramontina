@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Checklist de Vistoria</title>
+  <title>Checklist de Vistoria - Tramontina</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -226,17 +226,22 @@
 function toggleEquipamentos(sim) {
   const equipamentosSection = document.getElementById("equipamentos_section");
   const campoArmazenamento = document.getElementById("campo_armazenamento_equipamentos");
+  const qtdInput = document.getElementById("qtd_equipamentos");
+  const container = document.getElementById("equipamentos_container");
+
+  equipamentosSection.style.display = "block";
 
   if (sim) {
-    equipamentosSection.style.display = "block";
+    qtdInput.style.display = "block";
+    container.style.display = "block";
     campoArmazenamento.style.display = "none";
     gerarEquipamentos();
   } else {
-    equipamentosSection.style.display = "block"; // necessário para mostrar o container
-    document.getElementById("qtd_equipamentos").style.display = "none";
-    document.getElementById("equipamentos_container").style.display = "none";
+    qtdInput.style.display = "none";
+    container.style.display = "none";
     campoArmazenamento.style.display = "block";
   }
+}
 
       const equipamentosSection = document.getElementById("equipamentos_section");
       const campoArmazenamento = document.getElementById("campo_armazenamento_equipamentos");
