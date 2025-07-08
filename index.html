@@ -212,10 +212,11 @@
         <textarea name="comentarios" rows="6" placeholder="Descreva observações do local, condições, etc."></textarea>
       </div>
 
-      <button type="submit">Enviar Checklist</button>
+      <button type="submit" id="btnGerarPdf">Gerar e Enviar PDF</button>
     </form>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
     function toggleGas(sim) {
       document.getElementById("campo_descricao_gas_nao").style.display = sim ? "none" : "block";
@@ -286,7 +287,6 @@
     }
 
     window.onload = function () {
-      // Recarregar campos se o usuário já tiver preenchido
       const gasChecked = document.querySelector("input[name='gas_instalado']:checked");
       if (gasChecked) toggleGas(gasChecked.value === "sim");
 
@@ -299,6 +299,47 @@
       const drenoChecked = document.querySelector("input[name='tem_dreno']:checked");
       if (drenoChecked) toggleDreno(drenoChecked.value === "sim");
     };
+
+    // Geração de PDF + envio por PHP
+    document.querySelector("form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const ordem = document.querySelector("input[name='numero_ordem']").value || 'sem-ordem';
+      const doc = new jspdf.jsPDF();
+      let conteudo = '';
+
+      document.querySelectorAll("input, textarea, select").forEach(el => {
+        if (el.type !== "file" && el.name) {
+          const label = el.previousElementSibling?.innerText || el.name;
+          conteudo += `${label}: ${el.value || ''}\n`;
+        }
+      });
+
+      doc.text(conteudo, 10, 10);
+      const pdfBlob = doc.output("blob");
+      const pdfFile = new File([pdfBlob], `Checklist de Vistoria - ordem ${ordem}.pdf`, {
+        type: "application/pdf"
+      });
+
+      const formData = new FormData(document.querySelector("form"));
+      formData.append("pdf_gerado", pdfFile);
+
+      try {
+        const resposta = await fetch("enviar-checklist.php", {
+          method: "POST",
+          body: formData
+        });
+
+        if (resposta.ok) {
+          alert("Checklist enviado com sucesso!");
+        } else {
+          alert("Erro ao enviar checklist.");
+        }
+      } catch (err) {
+        console.error("Erro:", err);
+        alert("Erro técnico ao enviar checklist.");
+      }
+    });
   </script>
 </body>
 </html>
